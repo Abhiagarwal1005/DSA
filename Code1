@@ -1,0 +1,79 @@
+#include<iostream>
+using namespace std;
+
+struct Item{
+    double value;
+    double weight;
+    double ratio;
+};
+
+double knapsack(struct Item items[], int n, double capacity)
+{
+ double profit=0;
+ int i;
+ for(i=0; i<n; i++)
+ {
+     if(capacity>0.0 && items[i].weight <=capacity)
+     {
+         capacity -=items[i].weight;
+         profit +=items[i].value;
+     }
+     else
+     {
+         break;
+     }
+ }
+ if(capacity>0.0 && i<n)
+ {
+     profit=profit + items[i].value * (capacity / items[i].weight);
+ }
+ 
+ return profit;
+}
+
+int main()
+{
+    int i, j, n, max_idx;
+    double w, v, capacity;
+    
+    cout<<"enter no of items: ";
+    cin>>n;
+    
+    struct Item *items=new Item[n];
+    
+    cout<<"enter item values: ";
+    for(i=0; i<n; i++)
+    {
+        cin>>items[i].value;
+    }
+    
+    cout<<"enter items weights: ";
+    for(i=0; i<n; i++)
+    {
+        cin>>items[i].weight;
+        items[i].ratio=items[i].value/items[i].weight;
+    }
+    
+    cout<<"enter the capacity of knapsack: ";
+    cin>>capacity;
+    
+    for(i=0; i<n; i++)
+    {
+        max_idx=i;
+        for(j=i+1; j<n; j++)
+        {
+            if(items[j].ratio>items[max_idx].ratio)
+            {
+                max_idx=j;
+            }
+        }
+        if(max_idx!=i)
+        {
+            struct Item temp=items[i];
+            items[i]=items[max_idx];
+            items[max_idx]=temp;
+        }
+    }
+    
+    cout<<"maxi profit= "<<knapsack(items, n, capacity)<<endl;
+    delete[] items;
